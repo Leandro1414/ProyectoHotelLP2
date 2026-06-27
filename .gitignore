@@ -1,0 +1,55 @@
+# Maven / compilación
+target/
+*.jar
+*.war
+*.class
+
+# Spring Tool Suite / Eclipse
+.metadata/
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Visual Studio Code
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# Variables, secretos y configuración local
+.env
+.env.*
+!.env.example
+application-local.properties
+application-secret.properties
+src/main/resources/application-local.properties
+src/main/resources/application-secret.properties
+
+# Logs y archivos temporales
+*.log
+logs/
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# Mantener código fuente aunque una herramienta genere carpetas con estos nombres
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/

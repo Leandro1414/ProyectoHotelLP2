@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Detalle de reserva')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+<div th:replace="~{fragments/messages :: messages}"></div>
+<header class="page-header">
+    <div><h1 class="page-title" th:text="${'Reserva #' + reserva.idReserva}"></h1><p class="page-subtitle" th:text="${'Registrada el ' + #temporals.format(reserva.fechaReserva,'dd/MM/yyyy HH:mm')}"></p></div>
+    <div class="actions">
+        <a class="btn btn-secondary" th:href="@{/reservas}">Volver</a>
+        <a class="btn btn-primary" th:href="@{/reportes/comprobante/{id}(id=${reserva.idReserva})}" target="_blank">Comprobante PDF</a>
+        <a class="btn btn-secondary" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}" th:href="@{/reservas/edit/{id}(id=${reserva.idReserva})}">Editar</a>
+        <form class="inline-form" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}" th:action="@{/reservas/finish/{id}(id=${reserva.idReserva})}" method="post"><button class="btn btn-success" type="submit" data-confirm="¿Marcar la reserva como finalizada?">Finalizar</button></form>
+        <form class="inline-form" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}" th:action="@{/reservas/cancel/{id}(id=${reserva.idReserva})}" method="post"><button class="btn btn-danger" type="submit" data-confirm="¿Anular la reserva? El historial se conservará.">Anular</button></form>
+    </div>
+</header>
+
+<section class="grid grid-2">
+    <article class="card">
+        <h2 class="section-title">Información de la estadía</h2>
+        <div class="detail-list">
+            <div class="detail-item"><span>Cliente</span><strong th:text="${reserva.cliente.nombre}"></strong></div>
+            <div class="detail-item"><span>DNI / RUC</span><strong th:text="${reserva.cliente.rucDni}"></strong></div>
+            <div class="detail-item"><span>Ingreso</span><strong th:text="${#temporals.format(reserva.fechaIngreso,'dd/MM/yyyy')}"></strong></div>
+            <div class="detail-item"><span>Salida</span><strong th:text="${#temporals.format(reserva.fechaSalida,'dd/MM/yyyy')}"></strong></div>
+            <div class="detail-item"><span>Huéspedes</span><strong th:text="${reserva.cantidadHuespedes}"></strong></div>
+            <div class="detail-item"><span>Estado</span><strong><span class="badge" th:classappend="${'badge-' + reserva.estadoReserva.name()}" th:text="${reserva.estadoReserva.etiqueta}"></span></strong></div>
+            <div class="detail-item"><span>Empleado</span><strong th:text="${reserva.empleado.nombreCompleto}"></strong></div>
+            <div class="detail-item"><span>Comprobante</span><strong th:text="${reserva.numeroComprobante ?: 'No solicitado'}"></strong></div>
+        </div>
+    </article>
+    <article class="card">
+        <h2 class="section-title">Resumen económico</h2>
+        <p class="page-subtitle">El total incluye alojamiento por noche y todos los consumos registrados.</p>
+        <div class="total-box" th:text="${'S/ ' + #numbers.formatDecimal(reserva.montoTotal,1,2)}"></div>
+    </article>
+</section>
+
+<section class="card" style="margin-top:18px">
+    <header class="page-header" style="margin-bottom:12px"><div><h2 class="section-title" style="margin:0">Habitaciones asignadas</h2></div><a class="btn btn-secondary btn-sm" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}" th:href="@{/detalles-reserva/create(reservaId=${reserva.idReserva})}">+ Agregar habitación</a></header>
+    <div class="table-wrap"><table>
+        <thead><tr><th>Habitación</th><th>Categoría</th><th>Capacidad</th><th>Precio aplicado/noche</th><th>Acción</th></tr></thead>
+        <tbody>
+        <tr th:each="d:${reserva.detalles}"><td th:text="${d.habitacion.numeroHabitacion}"></td><td th:text="${d.habitacion.tipoHabitacion.nombreTipo}"></td><td th:text="${d.habitacion.tipoHabitacion.capacidadPersonas}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(d.precioAplicado,1,2)}"></td><td><form class="inline-form" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}" th:action="@{/detalles-reserva/delete/{id}(id=${d.idDetalle},reservaId=${reserva.idReserva})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Retirar esta habitación de la reserva?">Retirar</button></form></td></tr>
+        </tbody>
+    </table></div>
+</section>
+
+<section class="card" style="margin-top:18px">
+    <header class="page-header" style="margin-bottom:12px"><div><h2 class="section-title" style="margin:0">Servicios consumidos</h2></div><a class="btn btn-secondary btn-sm" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}" th:href="@{/servicios-reserva/create(reservaId=${reserva.idReserva})}">+ Registrar consumo</a></header>
+    <div class="table-wrap"><table>
+        <thead><tr><th>Fecha</th><th>Servicio</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th><th>Acciones</th></tr></thead>
+        <tbody>
+        <tr th:each="s:${reserva.servicios}"><td th:text="${#temporals.format(s.fechaConsumo,'dd/MM/yyyy HH:mm')}"></td><td th:text="${s.servicioAdicional.nombreServicio}"></td><td th:text="${s.cantidad}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(s.precioAplicado,1,2)}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(s.subtotal,1,2)}"></td><td><div class="actions" th:if="${reserva.estadoReserva.name() != 'CANCELADA' and reserva.estadoReserva.name() != 'FINALIZADA'}"><a class="btn btn-secondary btn-sm" th:href="@{/servicios-reserva/edit/{id}(id=${s.idServicioReserva})}">Editar</a><form class="inline-form" th:action="@{/servicios-reserva/delete/{id}(id=${s.idServicioReserva},reservaId=${reserva.idReserva})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Eliminar este consumo?">Eliminar</button></form></div></td></tr>
+        <tr th:if="${#sets.isEmpty(reserva.servicios)}"><td colspan="6" class="empty">No hay servicios consumidos.</td></tr>
+        </tbody>
+    </table></div>
+</section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

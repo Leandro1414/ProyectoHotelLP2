@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${reservaForm.idReserva == null ? 'Nueva reserva' : 'Editar reserva'})}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+<header class="page-header"><div><h1 class="page-title" th:text="${reservaForm.idReserva == null ? 'Nueva reserva' : 'Editar reserva'}"></h1><p class="page-subtitle">La disponibilidad y el monto se validan y calculan en el servidor.</p></div></header>
+<section class="card"><form class="form-grid" th:action="@{/reservas/save}" th:object="${reservaForm}" method="post">
+<input id="idReserva" type="hidden" th:field="*{idReserva}">
+<div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e:${#fields.globalErrors()}" th:text="${e}"></div>
+<div class="form-group"><label for="clienteId">Cliente</label><select id="clienteId" class="form-control" th:field="*{clienteId}" required><option value="">Seleccione</option><option th:each="c:${clientes}" th:value="${c.idCliente}" th:text="${c.nombre + ' · ' + c.rucDni}"></option></select><span class="field-error" th:errors="*{clienteId}"></span></div>
+<div class="form-group"><label for="empleadoId">Empleado responsable</label><select id="empleadoId" class="form-control" th:field="*{empleadoId}" required><option value="">Seleccione</option><option th:each="e:${empleados}" th:value="${e.idEmpleado}" th:text="${e.nombreCompleto + ' · ' + e.cargo.etiqueta}"></option></select><span class="field-error" th:errors="*{empleadoId}"></span></div>
+<div class="form-group"><label for="fechaIngreso">Fecha de ingreso</label><input id="fechaIngreso" class="form-control" type="date" th:field="*{fechaIngreso}" required><span class="field-error" th:errors="*{fechaIngreso}"></span></div>
+<div class="form-group"><label for="fechaSalida">Fecha de salida</label><input id="fechaSalida" class="form-control" type="date" th:field="*{fechaSalida}" required><span class="field-error" th:errors="*{fechaSalida}"></span></div>
+<div class="form-group"><label for="cantidadHuespedes">Cantidad de huéspedes</label><input id="cantidadHuespedes" class="form-control" type="number" min="1" th:field="*{cantidadHuespedes}" required><span class="field-error" th:errors="*{cantidadHuespedes}"></span></div>
+<div class="form-group"><label for="estadoReserva">Estado</label><select id="estadoReserva" class="form-control" th:field="*{estadoReserva}" required><option th:each="e:${estadosReserva}" th:value="${e}" th:text="${e.etiqueta}"></option></select><span class="field-error" th:errors="*{estadoReserva}"></span></div>
+<div class="form-group full"><label>Habitaciones disponibles</label><div id="roomContainer" class="room-list" th:data-availability-url="@{/reservas/api/habitaciones-disponibles}"><label class="room-option" th:each="h:${habitaciones}"><input type="checkbox" name="habitacionIds" th:value="${h.idHabitacion}" th:checked="${reservaForm.habitacionIds != null and #lists.contains(reservaForm.habitacionIds,h.idHabitacion)}"><span><strong th:text="${'Hab. ' + h.numeroHabitacion + ' · ' + h.tipoHabitacion.nombreTipo}"></strong><span class="room-meta" th:text="${'Capacidad: ' + h.tipoHabitacion.capacidadPersonas + ' · S/ ' + #numbers.formatDecimal(h.tipoHabitacion.precioNoche,1,2) + ' por noche'}"></span></span></label><div class="empty" th:if="${#lists.isEmpty(habitaciones)}">No hay habitaciones operativas disponibles.</div></div><span class="field-error" th:errors="*{habitacionIds}"></span><span class="help">Al cambiar las fechas, la lista se actualiza automáticamente.</span></div>
+<div class="form-group full"><label for="tipoComprobante">Comprobante</label><select id="tipoComprobante" class="form-control" th:field="*{tipoComprobante}"><option value="">Sin comprobante</option><option th:each="t:${tiposComprobante}" th:value="${t}" th:text="${t.etiqueta}"></option></select><span class="help">El número se genera automáticamente después de guardar.</span></div>
+<div class="form-actions"><a class="btn btn-secondary" th:href="@{/reservas}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar y calcular</button></div>
+</form></section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block><script th:src="@{/js/reserva-form.js}"></script>
+</body>
+</html>

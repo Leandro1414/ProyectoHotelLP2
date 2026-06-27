@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${empleado.idEmpleado == null ? 'Nuevo empleado' : 'Editar empleado'})}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <header class="page-header"><div><h1 class="page-title" th:text="${empleado.idEmpleado == null ? 'Nuevo empleado' : 'Editar empleado'}"></h1><p class="page-subtitle">Registro del personal del hotel.</p></div></header>
+    <section class="card"><form class="form-grid" th:action="@{/empleados/save}" th:object="${empleado}" method="post">
+        <input type="hidden" th:field="*{idEmpleado}">
+        <div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></div>
+        <div class="form-group"><label for="nombre">Nombre</label><input id="nombre" class="form-control" th:field="*{nombre}" required><span class="field-error" th:errors="*{nombre}"></span></div>
+        <div class="form-group"><label for="apellido">Apellido</label><input id="apellido" class="form-control" th:field="*{apellido}" required><span class="field-error" th:errors="*{apellido}"></span></div>
+        <div class="form-group"><label for="dni">DNI</label><input id="dni" class="form-control" th:field="*{dni}" maxlength="8" inputmode="numeric" required><span class="field-error" th:errors="*{dni}"></span></div>
+        <div class="form-group"><label for="cargo">Cargo</label><select id="cargo" class="form-control" th:field="*{cargo}" required><option value="">Seleccione</option><option th:each="c : ${cargos}" th:value="${c}" th:text="${c.etiqueta}"></option></select><span class="field-error" th:errors="*{cargo}"></span></div>
+        <div class="form-group full"><label for="telefono">Teléfono</label><input id="telefono" class="form-control" th:field="*{telefono}" maxlength="15" inputmode="numeric"><span class="field-error" th:errors="*{telefono}"></span></div>
+        <div class="form-actions"><a class="btn btn-secondary" th:href="@{/empleados}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar empleado</button></div>
+    </form></section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

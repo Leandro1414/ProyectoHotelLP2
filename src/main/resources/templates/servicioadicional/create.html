@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${servicioAdicional.idServicio == null ? 'Nuevo servicio' : 'Editar servicio'})}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container"><header class="page-header"><div><h1 class="page-title" th:text="${servicioAdicional.idServicio == null ? 'Nuevo servicio' : 'Editar servicio'}"></h1><p class="page-subtitle">El precio se congela cuando el servicio es consumido.</p></div></header>
+<section class="card"><form class="form-grid" th:action="@{/servicios-adicionales/save}" th:object="${servicioAdicional}" method="post">
+<input type="hidden" th:field="*{idServicio}">
+<div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e:${#fields.globalErrors()}" th:text="${e}"></div>
+<div class="form-group full"><label for="nombreServicio">Nombre del servicio</label><input id="nombreServicio" class="form-control" th:field="*{nombreServicio}" maxlength="100" required><span class="field-error" th:errors="*{nombreServicio}"></span></div>
+<div class="form-group full"><label for="precio">Precio unitario (S/)</label><input id="precio" class="form-control" type="number" step="0.01" min="0.01" th:field="*{precio}" required><span class="field-error" th:errors="*{precio}"></span></div>
+<div class="form-actions"><a class="btn btn-secondary" th:href="@{/servicios-adicionales}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar servicio</button></div>
+</form></section></main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

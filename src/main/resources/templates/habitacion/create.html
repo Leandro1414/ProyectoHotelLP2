@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${habitacion.idHabitacion == null ? 'Nueva habitación' : 'Editar habitación'})}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container"><header class="page-header"><div><h1 class="page-title" th:text="${habitacion.idHabitacion == null ? 'Nueva habitación' : 'Editar habitación'}"></h1><p class="page-subtitle">El estado representa disponibilidad operativa, no ocupación por fechas.</p></div></header>
+<section class="card"><form class="form-grid" th:action="@{/habitaciones/save}" th:object="${habitacion}" method="post">
+<input type="hidden" th:field="*{idHabitacion}">
+<div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e:${#fields.globalErrors()}" th:text="${e}"></div>
+<div class="form-group"><label for="numeroHabitacion">Número</label><input id="numeroHabitacion" class="form-control" th:field="*{numeroHabitacion}" maxlength="10" required><span class="field-error" th:errors="*{numeroHabitacion}"></span></div>
+<div class="form-group"><label for="piso">Piso</label><input id="piso" class="form-control" type="number" min="1" th:field="*{piso}" required><span class="field-error" th:errors="*{piso}"></span></div>
+<div class="form-group"><label for="tipo">Categoría</label><select id="tipo" class="form-control" th:field="*{tipoHabitacion.idTipo}" required><option value="">Seleccione</option><option th:each="t:${tipos}" th:value="${t.idTipo}" th:text="${t.nombreTipo + ' · S/ ' + #numbers.formatDecimal(t.precioNoche,1,2)}"></option></select><span class="field-error" th:errors="*{tipoHabitacion}"></span></div>
+<div class="form-group"><label for="estado">Estado operativo</label><select id="estado" class="form-control" th:field="*{estado}" required><option th:each="e:${estadosHabitacion}" th:value="${e}" th:text="${e.etiqueta}"></option></select><span class="field-error" th:errors="*{estado}"></span></div>
+<div class="form-actions"><a class="btn btn-secondary" th:href="@{/habitaciones}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar habitación</button></div>
+</form></section></main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

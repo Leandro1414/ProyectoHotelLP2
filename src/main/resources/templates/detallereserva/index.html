@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Asignaciones de habitación')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+<div th:replace="~{fragments/messages :: messages}"></div>
+<header class="page-header"><div><h1 class="page-title">Asignaciones de habitación</h1><p class="page-subtitle">Relación histórica entre reservas y habitaciones.</p></div><a class="btn btn-primary" th:href="@{/detalles-reserva/create}">+ Nueva asignación</a></header>
+<section class="card"><div class="table-wrap"><table>
+<thead><tr><th>ID</th><th>Reserva</th><th>Cliente</th><th>Habitación</th><th>Categoría</th><th>Precio aplicado</th><th></th></tr></thead>
+<tbody>
+<tr th:each="d:${detalles}"><td th:text="${d.idDetalle}"></td><td><a th:href="@{/reservas/view/{id}(id=${d.reserva.idReserva})}" th:text="${'#' + d.reserva.idReserva}"></a></td><td th:text="${d.reserva.cliente.nombre}"></td><td th:text="${d.habitacion.numeroHabitacion}"></td><td th:text="${d.habitacion.tipoHabitacion.nombreTipo}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(d.precioAplicado,1,2)}"></td><td><form class="inline-form" th:if="${d.reserva.estadoReserva.name() != 'CANCELADA' and d.reserva.estadoReserva.name() != 'FINALIZADA'}" th:action="@{/detalles-reserva/delete/{id}(id=${d.idDetalle},reservaId=${d.reserva.idReserva})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Retirar esta habitación?">Retirar</button></form></td></tr>
+<tr th:if="${#lists.isEmpty(detalles)}"><td colspan="7" class="empty">No hay asignaciones registradas.</td></tr>
+</tbody>
+</table></div></section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

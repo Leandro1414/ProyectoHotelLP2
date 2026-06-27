@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Consumos')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+<div th:replace="~{fragments/messages :: messages}"></div>
+<header class="page-header"><div><h1 class="page-title">Consumos por reserva</h1><p class="page-subtitle">Servicios adicionales cargados a cada estadía.</p></div><a class="btn btn-primary" th:href="@{/servicios-reserva/create}">+ Registrar consumo</a></header>
+<section class="card"><div class="table-wrap"><table>
+<thead><tr><th>ID</th><th>Reserva</th><th>Cliente</th><th>Servicio</th><th>Cantidad</th><th>Precio aplicado</th><th>Subtotal</th><th>Fecha</th><th>Acciones</th></tr></thead>
+<tbody>
+<tr th:each="s:${serviciosReserva}"><td th:text="${s.idServicioReserva}"></td><td><a th:href="@{/reservas/view/{id}(id=${s.reserva.idReserva})}" th:text="${'#' + s.reserva.idReserva}"></a></td><td th:text="${s.reserva.cliente.nombre}"></td><td th:text="${s.servicioAdicional.nombreServicio}"></td><td th:text="${s.cantidad}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(s.precioAplicado,1,2)}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(s.subtotal,1,2)}"></td><td th:text="${#temporals.format(s.fechaConsumo,'dd/MM/yyyy HH:mm')}"></td><td><div class="actions" th:if="${s.reserva.estadoReserva.name() != 'CANCELADA' and s.reserva.estadoReserva.name() != 'FINALIZADA'}"><a class="btn btn-secondary btn-sm" th:href="@{/servicios-reserva/edit/{id}(id=${s.idServicioReserva})}">Editar</a><form class="inline-form" th:action="@{/servicios-reserva/delete/{id}(id=${s.idServicioReserva},reservaId=${s.reserva.idReserva})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Eliminar este consumo?">Eliminar</button></form></div></td></tr>
+<tr th:if="${#lists.isEmpty(serviciosReserva)}"><td colspan="9" class="empty">No hay consumos registrados.</td></tr>
+</tbody>
+</table></div></section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,16 @@
+PROYECTO HOTEL - CAMBIOS V5
+
+Problema corregido:
+- Error 500 al abrir /habitaciones/edit/{id}.
+
+Causa:
+- Habitacion.tipoHabitacion está configurada con FetchType.LAZY.
+- spring.jpa.open-in-view=false cierra la sesión JPA antes de renderizar la vista.
+- La pantalla de edición necesitaba acceder a tipoHabitacion.idTipo.
+
+Solución:
+- Se agregó HabitacionRepository.buscarPorIdConTipo(id) con @EntityGraph.
+- HabitacionServiceImpl.buscarPorId(id) usa la nueva consulta.
+- Se agregó validación explícita cuando no se selecciona una categoría.
+
+No es necesario volver a ejecutar el script SQL.

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${servicioReservaForm.idServicioReserva == null ? 'Registrar consumo' : 'Editar consumo'})}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container"><header class="page-header"><div><h1 class="page-title" th:text="${servicioReservaForm.idServicioReserva == null ? 'Registrar consumo' : 'Editar consumo'}"></h1><p class="page-subtitle">El total de la reserva se recalcula automáticamente.</p></div></header>
+<section class="card"><form class="form-grid" th:action="@{/servicios-reserva/save}" th:object="${servicioReservaForm}" method="post">
+<input type="hidden" th:field="*{idServicioReserva}">
+<div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e:${#fields.globalErrors()}" th:text="${e}"></div>
+<div class="form-group"><label for="reservaId">Reserva</label><select id="reservaId" class="form-control" th:field="*{reservaId}" th:disabled="${servicioReservaForm.idServicioReserva != null}" required><option value="">Seleccione</option><option th:each="r:${reservas}" th:value="${r.idReserva}" th:text="${'#' + r.idReserva + ' · ' + r.cliente.nombre + ' · ' + r.estadoReserva.etiqueta}"></option></select><input th:if="${servicioReservaForm.idServicioReserva != null}" type="hidden" name="reservaId" th:value="${servicioReservaForm.reservaId}"><span class="field-error" th:errors="*{reservaId}"></span></div>
+<div class="form-group"><label for="servicioId">Servicio</label><select id="servicioId" class="form-control" th:field="*{servicioId}" required><option value="">Seleccione</option><option th:each="s:${serviciosAdicionales}" th:value="${s.idServicio}" th:text="${s.nombreServicio + ' · S/ ' + #numbers.formatDecimal(s.precio,1,2)}"></option></select><span class="field-error" th:errors="*{servicioId}"></span></div>
+<div class="form-group full"><label for="cantidad">Cantidad</label><input id="cantidad" class="form-control" type="number" min="1" th:field="*{cantidad}" required><span class="field-error" th:errors="*{cantidad}"></span></div>
+<div class="form-actions"><a class="btn btn-secondary" th:href="@{/servicios-reserva}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar consumo</button></div>
+</form></section></main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

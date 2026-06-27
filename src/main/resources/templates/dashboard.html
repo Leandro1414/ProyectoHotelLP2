@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Panel principal')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <div th:replace="~{fragments/messages :: messages}"></div>
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">Panel principal</h1>
+            <p class="page-subtitle">Resumen operativo del Hotel Exclusive</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/reservas/create}">+ Nueva reserva</a>
+    </header>
+
+    <section class="grid grid-4">
+        <article class="card stat-card"><div class="stat-label">Clientes</div><div class="stat-value" th:text="${totalClientes}">0</div></article>
+        <article class="card stat-card"><div class="stat-label">Habitaciones</div><div class="stat-value" th:text="${totalHabitaciones}">0</div></article>
+        <article class="card stat-card"><div class="stat-label">Reservas</div><div class="stat-value" th:text="${totalReservas}">0</div></article>
+        <article class="card stat-card"><div class="stat-label">Pendientes</div><div class="stat-value" th:text="${reservasPendientes}">0</div></article>
+    </section>
+
+    <section class="grid grid-2" style="margin-top:18px">
+        <article class="card stat-card">
+            <div class="stat-label">Estadías activas hoy</div>
+            <div class="stat-value" th:text="${reservasActivas}">0</div>
+            <p class="page-subtitle">Reservas vigentes para la fecha actual.</p>
+        </article>
+        <article class="card">
+            <h2 class="section-title">Accesos rápidos</h2>
+            <div class="actions">
+                <a class="btn btn-secondary" th:href="@{/clientes/create}">Registrar cliente</a>
+                <a class="btn btn-secondary" th:href="@{/habitaciones}">Ver habitaciones</a>
+                <a class="btn btn-secondary" th:href="@{/servicios-reserva/create}">Registrar consumo</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+        <h2 class="section-title">Reportes JasperReports</h2>
+        <p class="page-subtitle">Los dos casos de uso generan documentos PDF directamente desde vistas SQL.</p>
+        <div class="actions" style="margin-top:16px">
+            <a class="btn btn-primary" th:href="@{/reportes/reservas-hoy}" target="_blank">Reservas de hoy</a>
+            <a class="btn btn-secondary" th:href="@{/reportes/consumos-hoy}" target="_blank">Consumos de hoy</a>
+            <a class="btn btn-secondary" th:href="@{/reportes}">Centro de reportes</a>
+        </div>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+        <h2 class="section-title">Últimas reservas</h2>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>ID</th><th>Cliente</th><th>Ingreso</th><th>Salida</th><th>Estado</th><th>Total</th><th></th></tr></thead>
+                <tbody>
+                <tr th:each="r : ${ultimasReservas}">
+                    <td th:text="${'#' + r.idReserva}"></td>
+                    <td th:text="${r.cliente.nombre}"></td>
+                    <td th:text="${#temporals.format(r.fechaIngreso, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#temporals.format(r.fechaSalida, 'dd/MM/yyyy')}"></td>
+                    <td><span class="badge" th:classappend="${'badge-' + r.estadoReserva.name()}" th:text="${r.estadoReserva.etiqueta}"></span></td>
+                    <td th:text="${'S/ ' + #numbers.formatDecimal(r.montoTotal, 1, 2)}"></td>
+                    <td><a class="btn btn-secondary btn-sm" th:href="@{/reservas/view/{id}(id=${r.idReserva})}">Ver</a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(ultimasReservas)}"><td colspan="7" class="empty">Todavía no hay reservas registradas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

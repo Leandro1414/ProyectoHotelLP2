@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Agregar habitación')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container"><header class="page-header"><div><h1 class="page-title">Agregar habitación</h1><p class="page-subtitle">La disponibilidad se vuelve a comprobar al guardar.</p></div></header>
+<section class="card"><form class="form-grid" th:action="@{/detalles-reserva/save}" th:object="${detalleForm}" method="post">
+<div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e:${#fields.globalErrors()}" th:text="${e}"></div>
+<div class="form-group"><label for="reservaId">Reserva</label><select id="reservaId" class="form-control" th:field="*{reservaId}" required><option value="">Seleccione</option><option th:each="r:${reservas}" th:value="${r.idReserva}" th:text="${'#' + r.idReserva + ' · ' + r.cliente.nombre + ' · ' + r.fechaIngreso + ' a ' + r.fechaSalida}"></option></select><span class="field-error" th:errors="*{reservaId}"></span></div>
+<div class="form-group"><label for="habitacionId">Habitación</label><select id="habitacionId" class="form-control" th:field="*{habitacionId}" required><option value="">Seleccione</option><option th:each="h:${habitaciones}" th:value="${h.idHabitacion}" th:text="${h.numeroHabitacion + ' · ' + h.tipoHabitacion.nombreTipo}"></option></select><span class="field-error" th:errors="*{habitacionId}"></span></div>
+<div class="form-actions"><a class="btn btn-secondary" th:href="@{/detalles-reserva}">Cancelar</a><button class="btn btn-primary" type="submit">Agregar habitación</button></div>
+</form></section></main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

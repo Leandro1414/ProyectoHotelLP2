@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="navbar" th:fragment="navbar">
+    <a class="brand" th:href="@{/dashboard}">HOTEL EXCLUSIVE</a>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">Inicio</a>
+        <a th:href="@{/clientes}">Clientes</a>
+        <a th:href="@{/habitaciones}">Habitaciones</a>
+        <a th:href="@{/reservas}">Reservas</a>
+        <a th:href="@{/detalles-reserva}">Asignaciones</a>
+        <a th:href="@{/servicios-reserva}">Consumos</a>
+        <a th:href="@{/reportes}">Reportes</a>
+        <a th:if="${esAdmin}" th:href="@{/empleados}">Empleados</a>
+        <a th:if="${esAdmin}" th:href="@{/tipos-habitacion}">Categorías</a>
+        <a th:if="${esAdmin}" th:href="@{/servicios-adicionales}">Servicios</a>
+    </div>
+    <div class="user-box">
+        <span th:text="${usuarioActual}">Usuario</span>
+        <form class="logout-form" th:action="@{/logout}" method="post">
+            <button class="btn btn-secondary btn-sm" type="submit">Salir</button>
+        </form>
+    </div>
+</nav>
+</body>
+</html>

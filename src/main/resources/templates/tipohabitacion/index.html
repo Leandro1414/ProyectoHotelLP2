@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Categorías de habitación')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <div th:replace="~{fragments/messages :: messages}"></div>
+    <header class="page-header"><div><h1 class="page-title">Categorías de habitación</h1><p class="page-subtitle">Precios, descripción y capacidad.</p></div><a class="btn btn-primary" th:href="@{/tipos-habitacion/create}">+ Nueva categoría</a></header>
+    <section class="card"><div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Categoría</th><th>Descripción</th><th>Precio/noche</th><th>Capacidad</th><th>Acciones</th></tr></thead>
+        <tbody>
+        <tr th:each="t : ${tipos}"><td th:text="${t.idTipo}"></td><td th:text="${t.nombreTipo}"></td><td th:text="${t.descripcion ?: '-'}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(t.precioNoche,1,2)}"></td><td th:text="${t.capacidadPersonas + ' huésped(es)'}"></td><td><div class="actions"><a class="btn btn-secondary btn-sm" th:href="@{/tipos-habitacion/edit/{id}(id=${t.idTipo})}">Editar</a><form class="inline-form" th:action="@{/tipos-habitacion/delete/{id}(id=${t.idTipo})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Eliminar esta categoría?">Eliminar</button></form></div></td></tr>
+        <tr th:if="${#lists.isEmpty(tipos)}"><td colspan="6" class="empty">No hay categorías registradas.</td></tr>
+        </tbody>
+    </table></div></section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

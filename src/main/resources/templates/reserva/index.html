@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Reservas')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+<div th:replace="~{fragments/messages :: messages}"></div>
+<header class="page-header"><div><h1 class="page-title">Reservas</h1><p class="page-subtitle">Historial completo sin eliminaciones físicas.</p></div><a class="btn btn-primary" th:href="@{/reservas/create}">+ Generar reserva</a></header>
+<section class="card">
+<form class="search-bar" method="get" th:action="@{/reservas}"><input class="form-control" type="search" name="q" th:value="${q}" placeholder="Buscar por cliente o comprobante"><button class="btn btn-secondary" type="submit">Buscar</button><a class="btn btn-secondary" th:if="${q}" th:href="@{/reservas}">Limpiar</a></form>
+<div class="table-wrap"><table>
+<thead><tr><th>ID</th><th>Cliente</th><th>Ingreso</th><th>Salida</th><th>Huéspedes</th><th>Estado</th><th>Comprobante</th><th>Total</th><th>Acciones</th></tr></thead>
+<tbody>
+<tr th:each="r:${reservas}">
+<td th:text="${'#' + r.idReserva}"></td><td th:text="${r.cliente.nombre}"></td><td th:text="${#temporals.format(r.fechaIngreso,'dd/MM/yyyy')}"></td><td th:text="${#temporals.format(r.fechaSalida,'dd/MM/yyyy')}"></td><td th:text="${r.cantidadHuespedes}"></td><td><span class="badge" th:classappend="${'badge-' + r.estadoReserva.name()}" th:text="${r.estadoReserva.etiqueta}"></span></td><td th:text="${r.numeroComprobante ?: 'Sin comprobante'}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(r.montoTotal,1,2)}"></td>
+<td><div class="actions"><a class="btn btn-secondary btn-sm" th:href="@{/reservas/view/{id}(id=${r.idReserva})}">Ver</a><a class="btn btn-secondary btn-sm" th:href="@{/reportes/comprobante/{id}(id=${r.idReserva})}" target="_blank">PDF</a><a class="btn btn-secondary btn-sm" th:if="${r.estadoReserva.name() != 'CANCELADA' and r.estadoReserva.name() != 'FINALIZADA'}" th:href="@{/reservas/edit/{id}(id=${r.idReserva})}">Editar</a></div></td>
+</tr>
+<tr th:if="${#lists.isEmpty(reservas)}"><td colspan="9" class="empty">No se encontraron reservas.</td></tr>
+</tbody>
+</table></div>
+</section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

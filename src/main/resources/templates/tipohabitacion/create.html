@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${tipoHabitacion.idTipo == null ? 'Nueva categoría' : 'Editar categoría'})}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container"><header class="page-header"><div><h1 class="page-title" th:text="${tipoHabitacion.idTipo == null ? 'Nueva categoría' : 'Editar categoría'}"></h1><p class="page-subtitle">Define características comerciales de la habitación.</p></div></header>
+<section class="card"><form class="form-grid" th:action="@{/tipos-habitacion/save}" th:object="${tipoHabitacion}" method="post">
+    <input type="hidden" th:field="*{idTipo}">
+    <div class="form-error full" th:if="${#fields.hasGlobalErrors()}" th:each="e:${#fields.globalErrors()}" th:text="${e}"></div>
+    <div class="form-group full"><label for="nombreTipo">Nombre</label><input id="nombreTipo" class="form-control" th:field="*{nombreTipo}" maxlength="50" required><span class="field-error" th:errors="*{nombreTipo}"></span></div>
+    <div class="form-group full"><label for="descripcion">Descripción</label><textarea id="descripcion" class="form-control" th:field="*{descripcion}" rows="4" maxlength="1000"></textarea><span class="field-error" th:errors="*{descripcion}"></span></div>
+    <div class="form-group"><label for="precioNoche">Precio por noche (S/)</label><input id="precioNoche" class="form-control" type="number" step="0.01" min="0.01" th:field="*{precioNoche}" required><span class="field-error" th:errors="*{precioNoche}"></span></div>
+    <div class="form-group"><label for="capacidadPersonas">Capacidad</label><input id="capacidadPersonas" class="form-control" type="number" min="1" th:field="*{capacidadPersonas}" required><span class="field-error" th:errors="*{capacidadPersonas}"></span></div>
+    <div class="form-actions"><a class="btn btn-secondary" th:href="@{/tipos-habitacion}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar categoría</button></div>
+</form></section></main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

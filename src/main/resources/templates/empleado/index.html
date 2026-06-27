@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Empleados')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <div th:replace="~{fragments/messages :: messages}"></div>
+    <header class="page-header"><div><h1 class="page-title">Empleados</h1><p class="page-subtitle">Personal autorizado para registrar reservas.</p></div><a class="btn btn-primary" th:href="@{/empleados/create}">+ Nuevo empleado</a></header>
+    <section class="card">
+        <form class="search-bar" method="get" th:action="@{/empleados}"><input class="form-control" type="search" name="q" th:value="${q}" placeholder="Buscar por nombre, apellido o DNI"><button class="btn btn-secondary">Buscar</button><a class="btn btn-secondary" th:if="${q}" th:href="@{/empleados}">Limpiar</a></form>
+        <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>Nombre</th><th>DNI</th><th>Cargo</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+            <tbody>
+            <tr th:each="e : ${empleados}"><td th:text="${e.idEmpleado}"></td><td th:text="${e.nombreCompleto}"></td><td th:text="${e.dni}"></td><td th:text="${e.cargo.etiqueta}"></td><td th:text="${e.telefono ?: '-'}"></td><td><div class="actions"><a class="btn btn-secondary btn-sm" th:href="@{/empleados/edit/{id}(id=${e.idEmpleado})}">Editar</a><form class="inline-form" th:action="@{/empleados/delete/{id}(id=${e.idEmpleado})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Eliminar este empleado?">Eliminar</button></form></div></td></tr>
+            <tr th:if="${#lists.isEmpty(empleados)}"><td colspan="6" class="empty">No se encontraron empleados.</td></tr>
+            </tbody>
+        </table></div>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

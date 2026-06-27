@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Reportes')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">Reportes</h1>
+            <p class="page-subtitle">Documentos PDF generados con JasperReports y consultas SQL.</p>
+        </div>
+    </header>
+
+    <section class="grid grid-2">
+        <article class="card">
+            <h2 class="section-title">Reservas registradas hoy</h2>
+            <p class="page-subtitle">Lista reservas, clientes, fechas, habitaciones, estados, comprobantes y total del día.</p>
+            <div class="actions" style="margin-top:18px">
+                <a class="btn btn-primary" th:href="@{/reportes/reservas-hoy}" target="_blank">Ver PDF</a>
+                <a class="btn btn-secondary" th:href="@{/reportes/reservas-hoy(modo='descargar')}">Descargar</a>
+            </div>
+        </article>
+
+        <article class="card">
+            <h2 class="section-title">Servicios consumidos hoy</h2>
+            <p class="page-subtitle">Detalla consumos por reserva, cliente, servicio, cantidad, precio y subtotal.</p>
+            <div class="actions" style="margin-top:18px">
+                <a class="btn btn-primary" th:href="@{/reportes/consumos-hoy}" target="_blank">Ver PDF</a>
+                <a class="btn btn-secondary" th:href="@{/reportes/consumos-hoy(modo='descargar')}">Descargar</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+        <h2 class="section-title">Comprobante individual</h2>
+        <p class="page-subtitle">El comprobante de una reserva se genera desde el botón <strong>Comprobante PDF</strong> de su pantalla de detalle.</p>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

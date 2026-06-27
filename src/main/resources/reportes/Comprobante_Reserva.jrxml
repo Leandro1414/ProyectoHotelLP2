@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="Comprobante_Reserva" pageWidth="226" pageHeight="800" columnWidth="206"
+              leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10"
+              whenNoDataType="NoDataSection"
+              uuid="f311c4ca-253f-483f-9fb8-c6c27ab63003">
+
+    <parameter name="idReserva" class="java.lang.Integer"/>
+
+    <queryString language="SQL">
+        <![CDATA[SELECT
+    id_reserva,
+    numero_comprobante,
+    tipo_comprobante,
+    fecha_reserva,
+    cliente_nombre,
+    cliente_documento,
+    cliente_direccion,
+    empleado_nombre,
+    fecha_ingreso,
+    fecha_salida,
+    cantidad_huespedes,
+    estado_reserva,
+    item_orden,
+    item_id,
+    concepto,
+    cantidad,
+    precio_unitario,
+    subtotal,
+    monto_total
+FROM vista_comprobante_reserva
+WHERE id_reserva = $P{idReserva}
+ORDER BY item_orden, item_id]]>
+    </queryString>
+
+    <field name="id_reserva" class="java.lang.Integer"/>
+    <field name="numero_comprobante" class="java.lang.String"/>
+    <field name="tipo_comprobante" class="java.lang.String"/>
+    <field name="fecha_reserva" class="java.sql.Timestamp"/>
+    <field name="cliente_nombre" class="java.lang.String"/>
+    <field name="cliente_documento" class="java.lang.String"/>
+    <field name="cliente_direccion" class="java.lang.String"/>
+    <field name="empleado_nombre" class="java.lang.String"/>
+    <field name="fecha_ingreso" class="java.sql.Date"/>
+    <field name="fecha_salida" class="java.sql.Date"/>
+    <field name="cantidad_huespedes" class="java.lang.Integer"/>
+    <field name="estado_reserva" class="java.lang.String"/>
+    <field name="item_orden" class="java.lang.Integer"/>
+    <field name="item_id" class="java.lang.Integer"/>
+    <field name="concepto" class="java.lang.String"/>
+    <field name="cantidad" class="java.lang.Integer"/>
+    <field name="precio_unitario" class="java.math.BigDecimal"/>
+    <field name="subtotal" class="java.math.BigDecimal"/>
+    <field name="monto_total" class="java.math.BigDecimal"/>
+
+    <variable name="totalGeneral" class="java.math.BigDecimal" calculation="Highest">
+        <variableExpression><![CDATA[$F{monto_total}]]></variableExpression>
+    </variable>
+
+    <title>
+        <band height="116">
+            <staticText><reportElement x="0" y="0" width="206" height="20"/><textElement textAlignment="Center"><font size="14" isBold="true"/></textElement><text><![CDATA[HOTEL EXCLUSIVE]]></text></staticText>
+            <staticText><reportElement x="0" y="20" width="206" height="14"/><textElement textAlignment="Center"><font size="8"/></textElement><text><![CDATA[Lima - Perú]]></text></staticText>
+            <staticText><reportElement x="0" y="34" width="206" height="14"/><textElement textAlignment="Center"><font size="8"/></textElement><text><![CDATA[RUC: 20123456789]]></text></staticText>
+            <textField><reportElement x="0" y="52" width="206" height="18"/><textElement textAlignment="Center"><font size="11" isBold="true"/></textElement><textFieldExpression><![CDATA[$F{tipo_comprobante} + " DE RESERVA"]]></textFieldExpression></textField>
+            <textField><reportElement x="0" y="70" width="206" height="16"/><textElement textAlignment="Center"><font size="10" isBold="true"/></textElement><textFieldExpression><![CDATA[$F{numero_comprobante}]]></textFieldExpression></textField>
+            <line><reportElement x="0" y="92" width="206" height="1"/></line>
+            <textField pattern="dd/MM/yyyy HH:mm"><reportElement x="0" y="96" width="206" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Emisión: " + $F{fecha_reserva}]]></textFieldExpression></textField>
+        </band>
+    </title>
+
+    <pageHeader>
+        <band height="88">
+            <textField><reportElement x="0" y="0" width="206" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Cliente: " + $F{cliente_nombre}]]></textFieldExpression></textField>
+            <textField><reportElement x="0" y="14" width="206" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Documento: " + $F{cliente_documento}]]></textFieldExpression></textField>
+            <textField isBlankWhenNull="true"><reportElement x="0" y="28" width="206" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Dirección: " + ($F{cliente_direccion} == null ? "-" : $F{cliente_direccion})]]></textFieldExpression></textField>
+            <textField><reportElement x="0" y="42" width="206" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Atendido por: " + $F{empleado_nombre}]]></textFieldExpression></textField>
+            <textField pattern="dd/MM/yyyy"><reportElement x="0" y="56" width="103" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Ingreso: " + $F{fecha_ingreso}]]></textFieldExpression></textField>
+            <textField pattern="dd/MM/yyyy"><reportElement x="103" y="56" width="103" height="14"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA["Salida: " + $F{fecha_salida}]]></textFieldExpression></textField>
+            <textField><reportElement x="0" y="70" width="206" height="14"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA["Huéspedes: " + $F{cantidad_huespedes} + " | Estado: " + $F{estado_reserva}]]></textFieldExpression></textField>
+            <line><reportElement x="0" y="85" width="206" height="1"/></line>
+        </band>
+    </pageHeader>
+
+    <columnHeader>
+        <band height="16">
+            <staticText><reportElement x="0" y="0" width="86" height="14"/><textElement><font size="7" isBold="true"/></textElement><text><![CDATA[CONCEPTO]]></text></staticText>
+            <staticText><reportElement x="86" y="0" width="20" height="14"/><textElement textAlignment="Center"><font size="7" isBold="true"/></textElement><text><![CDATA[CANT]]></text></staticText>
+            <staticText><reportElement x="106" y="0" width="50" height="14"/><textElement textAlignment="Right"><font size="7" isBold="true"/></textElement><text><![CDATA[P.UNIT]]></text></staticText>
+            <staticText><reportElement x="156" y="0" width="50" height="14"/><textElement textAlignment="Right"><font size="7" isBold="true"/></textElement><text><![CDATA[SUBTOTAL]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="16">
+            <textField textAdjust="StretchHeight"><reportElement x="0" y="0" width="86" height="14"/><textElement><font size="7"/></textElement><textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression></textField>
+            <textField><reportElement x="86" y="0" width="20" height="14"/><textElement textAlignment="Center"><font size="7"/></textElement><textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="106" y="0" width="50" height="14"/><textElement textAlignment="Right"><font size="7"/></textElement><textFieldExpression><![CDATA[$F{precio_unitario}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="156" y="0" width="50" height="14"/><textElement textAlignment="Right"><font size="7"/></textElement><textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="64">
+            <line><reportElement x="0" y="4" width="206" height="1"/></line>
+            <staticText><reportElement x="106" y="10" width="50" height="16"/><textElement textAlignment="Right"><font size="9" isBold="true"/></textElement><text><![CDATA[TOTAL S/]]></text></staticText>
+            <textField pattern="#,##0.00"><reportElement x="156" y="10" width="50" height="16"/><textElement textAlignment="Right"><font size="9" isBold="true"/></textElement><textFieldExpression><![CDATA[$V{totalGeneral}]]></textFieldExpression></textField>
+            <staticText><reportElement x="0" y="34" width="206" height="14"/><textElement textAlignment="Center"><font size="7" isItalic="true"/></textElement><text><![CDATA[Gracias por elegir Hotel Exclusive]]></text></staticText>
+            <staticText><reportElement x="0" y="47" width="206" height="14"/><textElement textAlignment="Center"><font size="7" isItalic="true"/></textElement><text><![CDATA[Sistema de Reservas - Cibertec]]></text></staticText>
+        </band>
+    </summary>
+
+    <noData>
+        <band height="70">
+            <staticText><reportElement x="0" y="20" width="206" height="30"/><textElement textAlignment="Center"><font size="9" isItalic="true"/></textElement><text><![CDATA[No se encontró información para esta reserva]]></text></staticText>
+        </band>
+    </noData>
+</jasperReport>

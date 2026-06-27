@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Servicios adicionales')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+<div th:replace="~{fragments/messages :: messages}"></div>
+<header class="page-header"><div><h1 class="page-title">Servicios adicionales</h1><p class="page-subtitle">Catálogo de consumos y precios vigentes.</p></div><a class="btn btn-primary" th:href="@{/servicios-adicionales/create}">+ Nuevo servicio</a></header>
+<section class="card"><div class="table-wrap"><table>
+<thead><tr><th>ID</th><th>Servicio</th><th>Precio unitario</th><th>Acciones</th></tr></thead>
+<tbody>
+<tr th:each="s:${servicios}"><td th:text="${s.idServicio}"></td><td th:text="${s.nombreServicio}"></td><td th:text="${'S/ ' + #numbers.formatDecimal(s.precio,1,2)}"></td><td><div class="actions"><a class="btn btn-secondary btn-sm" th:href="@{/servicios-adicionales/edit/{id}(id=${s.idServicio})}">Editar</a><form class="inline-form" th:action="@{/servicios-adicionales/delete/{id}(id=${s.idServicio})}" method="post"><button class="btn btn-danger btn-sm" type="submit" data-confirm="¿Eliminar este servicio?">Eliminar</button></form></div></td></tr>
+<tr th:if="${#lists.isEmpty(servicios)}"><td colspan="4" class="empty">No hay servicios registrados.</td></tr>
+</tbody>
+</table></div></section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer><th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>
